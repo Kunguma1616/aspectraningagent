@@ -18,6 +18,7 @@ from retell import Retell
 # ==============================
 ADMIN_EMAIL = os.getenv("ASPECT_ADMIN_EMAIL", "Alex.Bacon@aspect.co.uk")
 ADMIN_PASSWORD = os.getenv("ASPECT_ADMIN_PASSWORD", "Alex.Bacon#123")
+RETELL_API_KEY = os.getenv("RETELL_API_KEY")
 
 # --- USER STORAGE ---
 USERS_FILE = Path("users.json")
