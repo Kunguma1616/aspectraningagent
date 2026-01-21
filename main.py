@@ -27,11 +27,7 @@ USERS_FILE = Path("users.json")
 FROM_NUMBER = os.getenv("RETELL_FROM_NUMBER", "+441479787918")
 
 # --- AGENT CONFIGURATION ---
-CHAIN_START_AGENT_IDS = {
-    "Female Voice Start": os.getenv("RETELL_AGENT_ID_FEMALE", "agent_c3f46c38e6348846dc844fe9d1"), # Agent with Amy's voice
-    "Male Voice Start": os.getenv("RETELL_AGENT_ID_MALE", "agent_adbd2014e4adf09638ffa0f5f6"),   # Agent with Anthony's voice
-}
-
+DEFAULT_AGENT_ID = os.getenv("RETELL_AGENT_ID", "agent_adbd2014e4adf09638ffa0f5f6")
 # Agent ID specifically for post-call evaluation and scoring
 EVALUATION_AGENT_ID = os.getenv("RETELL_EVALUATION_AGENT_ID", "agent_aa0cc8b0f8cd9dcb7d797acac9")
 
