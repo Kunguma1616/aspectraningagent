@@ -750,15 +750,12 @@ def render_user_view(client: Retell):
         st.markdown(f"""<div class="level-card"><h4>{level_info['name']}</h4><p><strong>Focus:</strong> {level_info['description']}</p><p><small>{level_info['details']}</small></p></div>""", unsafe_allow_html=True)
         
         st.markdown("### Voice Selection")
-        voice_options = ["Alternate Each Call"] + list(CHAIN_START_AGENT_IDS.keys())
-        default_voice = "Female Voice Start"
-        default_index = voice_options.index(default_voice) if default_voice in voice_options else 0
-        
+# Since we only have one agent, we don't need to look up keys in a dictionary
         selected_voice_option = st.selectbox(
             "Choose Starting Agent Voice:",
-            options=voice_options,
-            index=default_index,
-            help="Select which voice starts the training. The voice will switch mid-call based on agent configuration."
+             options=["Default Agent Voice"],
+             index=0,
+             help="Using the default agent configured in your environment variables."
         )
 
         st.markdown("---")
@@ -800,17 +797,9 @@ def render_user_view(client: Retell):
             try:
                 with st.spinner("Initiating training session..."):
                     
-                    if "voice_idx" not in st.session_state:
-                        st.session_state.voice_idx = 0
-                    
-                    agent_id_to_use = None
-                    if selected_voice_option == "Alternate Each Call":
-                        voice_keys = sorted(list(CHAIN_START_AGENT_IDS.keys()))
-                        key_to_use = voice_keys[st.session_state.voice_idx % len(voice_keys)]
-                        agent_id_to_use = CHAIN_START_AGENT_IDS[key_to_use]
-                        st.session_state.voice_idx += 1
-                    else:
-                        agent_id_to_use = CHAIN_START_AGENT_IDS[selected_voice_option]
+                    # FIX: We no longer need to "choose" or "alternate"
+                    # We just use the ID you defined at the top of the file
+                    agent_id_to_use = DEFAULT_AGENT_ID
 
                     call_params = {
                         "from_number": FROM_NUMBER,
@@ -820,19 +809,7 @@ def render_user_view(client: Retell):
                         "metadata": session_metadata
                     }
                     
-                    # --- IMMEDIATE FIX ---
-                    # The lines below for 'post_call_analysis' were causing the crash because your
-                    # retell-python library is outdated. I have commented them out so the app will run.
-                    #
-                    # --- PERMANENT SOLUTION ---
-                    # 1. Open your terminal/command prompt.
-                    # 2. Run this command:   pip install --upgrade retell-python
-                    # 3. After it finishes, UNCOMMENT the three lines below to re-enable analysis.
-                    
-                    # if EVALUATION_AGENT_ID and enable_analysis:
-                    #     call_params["post_call_analysis"] = True
-                    #     call_params["post_call_analysis_agent_id"] = EVALUATION_AGENT_ID
-                    
+                    # This creates the call using the Retell API
                     response = client.call.create_phone_call(**call_params)
 
                     st.session_state.current_call_id = response.call_id
